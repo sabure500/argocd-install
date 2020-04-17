@@ -7,7 +7,7 @@ on:
     types: [argo-install]
 
 env:
-  PROJECT_ID: ${{secret.PROJECT_ID}}
+  PROJECT_ID: ${{secrets.PROJECT_ID}}
   GKE_CLUSTER: my-gke-cluster
   GKE_ZONE: us-west1-a
 jobs:
@@ -19,15 +19,15 @@ jobs:
 
       - name: Setup Google Cloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-          with:
-            version: '286.0.0'
-            project_id: "$PROJECT_ID"
-            service_account_email: ${{ secrets.SA_EMAIL }}
-            service_account_key: ${{ secrets.SA_KEY }}
+        with:
+          version: '289.0.0'
+          project_id: ${{secrets.PROJECT_ID}}
+          service_account_email: ${{ secrets.SA_EMAIL }}
+          service_account_key: ${{ secrets.SA_KEY }}
       - name: Setup GKE
-      - run: |-
+        run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
       - name: Argo install
-      - run: |-
+        run: |-
           kubectl get nodes
           kubectl get namespaces
