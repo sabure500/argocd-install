@@ -37,10 +37,11 @@ jobs:
         run: |-
           curl -sSL -o ./argocd https://github.com/argoproj/argo-cd/releases/download/v1.5.2/argocd-linux-amd64
           chmod +x ./argocd
+          ls -l
       - name: Argo change password
         run: |-
           ARGOCD_SERVER=$(kubectl get service argocd-server -n argocd |awk 'NR==2' | awk '{print $4}')
           echo $ARGOCD_SERVER
           TEMP_PASSWORD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
-          argocd login --insecure --username admin --password $TEMP_PASSWORD $ARGOCD_SERVER
-          argocd account update-password --new-password ${{secrets.ARGOCD_PASSWORD}}
+          ./argocd login --insecure --username admin --password $TEMP_PASSWORD $ARGOCD_SERVER
+          ./argocd account update-password --new-password ${{secrets.ARGOCD_PASSWORD}}
