@@ -43,7 +43,7 @@ jobs:
 
       - name: Argo change password
         run: |-
-          sleep 5m
+          sleep 3m
           ARGOCD_SERVER=$(kubectl get service argocd-server -n argocd |awk 'NR==2' | awk '{print $4}')
           echo $ARGOCD_SERVER
           ARGOCD_TEMP_PASSWORD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
