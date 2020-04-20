@@ -18,3 +18,4 @@ curl -vv \
 ## 参考
 * [GCP用GithubActionsリポジトリ](https://github.com/GoogleCloudPlatform/github-actions/blob/master/setup-gcloud/README.md)
 * [Argocd公式リポジトリ](https://github.com/argoproj/argo-cd)
+* [actions/checkoutの使い方](https://github.com/actions/checkout)
