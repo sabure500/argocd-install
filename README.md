@@ -1,4 +1,4 @@
-# argo-install
+# argocd-install
 ArgoCDインストール用リポジトリ
 
 ## はじめに
@@ -12,7 +12,7 @@ curl -vv \
   -H "Authorization: token $PERSONAL_ACCESS_TOKEN" \
   -H "Accept: application/vnd.github.everest-preview+json" \
   "https://api.github.com/repos/sabure500/argo-install/dispatches" \
-  -d '{"event_type": "argo-install", "client_payload": {"target_brunch": "master"}}'
+  -d '{"event_type": "argocd-install", "client_payload": {"target_brunch": "master"}}'
 ```
 
 ## 参考

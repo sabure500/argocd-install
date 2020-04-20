@@ -1,10 +1,10 @@
-name: 'argo-install'
+name: 'argocd-install'
 on:
   push:
     branches:
       - master
   repository_dispatch:
-    types: [argo-install]
+    types: [argocd-install]
 
 env:
   PROJECT_ID: ${{secrets.PROJECT_ID}}
@@ -29,7 +29,7 @@ jobs:
         run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
-      - name: Create Argo Application
+      - name: Create ArgoCD Application
         run: |-
           kubectl create namespace argocd
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.2/manifests/install.yaml
@@ -41,9 +41,9 @@ jobs:
           curl -sSL -o ./argocd https://github.com/argoproj/argo-cd/releases/download/v1.5.2/argocd-linux-amd64
           chmod +x ./argocd
 
-      - name: Argo change password
+      - name: ArgoCD change password
         run: |-
-          sleep 5m
+          sleep 3m
           ARGOCD_SERVER=$(kubectl get service argocd-server -n argocd |awk 'NR==2' | awk '{print $4}')
           echo $ARGOCD_SERVER
           ARGOCD_TEMP_PASSWORD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
