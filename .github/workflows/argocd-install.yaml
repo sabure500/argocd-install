@@ -37,7 +37,7 @@ jobs:
       - name: ls before
         run: |-
           ls -l
-          kustomize --help
+          ./kustomize --help
 
       - name: Checkout argocd-admin repository
         uses: actions/checkout@v2
@@ -49,7 +49,7 @@ jobs:
       - name: ls after
         run: |-
           ls -l
-          kustomize --help
+          ./kustomize --help
 
       # - name: Create ArgoCD Application
       #   run: |-
