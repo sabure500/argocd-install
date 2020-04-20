@@ -29,16 +29,6 @@ jobs:
       #   run: |-
       #     gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
-      - name: Set up Kustomize
-        run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
-          chmod u+x ./kustomize
-
-      - name: ls before
-        run: |-
-          ls -l
-          ./kustomize --help
-
       - name: Checkout argocd-admin repository
         uses: actions/checkout@v2
         with:
@@ -46,10 +36,17 @@ jobs:
           ref: master
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
+      - name: Set up Kustomize
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
       - name: ls after
         run: |-
           ls -l
           ./kustomize --help
+          ./kustomize build . > sample.yaml
+          cat sample.yaml
 
       # - name: Create ArgoCD Application
       #   run: |-
