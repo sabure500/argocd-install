@@ -44,7 +44,7 @@ jobs:
       - name: Create ArgoCD Application
         run: |-
           kubectl create namespace argocd
-          ./kustomize build . | kubectl apply -n argocd -f 
+          ./kustomize build . | kubectl apply -n argocd -f -
           kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
           kubectl get deploy,pod,svc -n argocd
 
