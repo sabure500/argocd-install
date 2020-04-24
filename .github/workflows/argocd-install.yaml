@@ -11,11 +11,11 @@ env:
   GKE_CLUSTER: my-gke-cluster
   GKE_ZONE: us-west1-a
 jobs:
-  argo-install:
+  argocd-install:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup Google Cloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -29,14 +29,25 @@ jobs:
         run: |-
           gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
 
-      - name: Create ArgoCD Application
+      - name: Checkout argocd-admin repository
+        uses: actions/checkout@v2
+        with:
+          repository: sabure500/argocd-admin
+          ref: master
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Setup Kustomize
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x ./kustomize
+
+      - name: Install ArgoCD Application
         run: |-
           kubectl create namespace argocd
-          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.5.2/manifests/install.yaml
-          kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+          ./kustomize build . | kubectl apply -n argocd -f -
           kubectl get deploy,pod,svc -n argocd
 
-      - name: Download Argocd CLI
+      - name: Download ArgoCD CLI
         run: |-
           curl -sSL -o ./argocd https://github.com/argoproj/argo-cd/releases/download/v1.5.2/argocd-linux-amd64
           chmod +x ./argocd
