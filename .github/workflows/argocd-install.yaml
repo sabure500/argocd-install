@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: sabure500/argocd-admin
-          ref: master
+          ref: ingress
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Setup Kustomize
@@ -55,8 +55,8 @@ jobs:
 
       - name: ArgoCD change password
         run: |-
-          sleep 3m
-          ARGOCD_SERVER=$(kubectl get service argocd-server -n argocd |awk 'NR==2' | awk '{print $4}')
+          sleep 20m
+          ARGOCD_SERVER=$(kubectl get ingress -n argocd |awk 'NR==2' | awk '{print $3}')
           echo $ARGOCD_SERVER
           ARGOCD_TEMP_PASSWORD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
           ./argocd login --insecure --username admin --password $ARGOCD_TEMP_PASSWORD $ARGOCD_SERVER
