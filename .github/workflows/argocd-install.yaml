@@ -43,6 +43,7 @@ jobs:
 
       - name: Install ArgoCD Application
         run: |-
+          ls -l
           kubectl apply -f argocd-namespace.yaml
           kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.7.8/manifests/install.yaml
           ./kustomize build . | kubectl apply -n argocd -f -
