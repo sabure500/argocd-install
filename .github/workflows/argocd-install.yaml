@@ -20,7 +20,7 @@ jobs:
       - name: Setup Google Cloud
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
-          version: '289.0.0'
+          version: '290.0.1'
           project_id: ${{secrets.PROJECT_ID}}
           service_account_email: ${{ secrets.SA_EMAIL }}
           service_account_key: ${{ secrets.SA_KEY }}
@@ -38,25 +38,25 @@ jobs:
 
       - name: Setup Kustomize
         run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
           chmod u+x ./kustomize
 
       - name: Install ArgoCD Application
         run: |-
           kubectl create namespace argocd
-          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.7.2/manifests/install.yaml
+          # kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v1.7.8/manifests/install.yaml
           ./kustomize build . | kubectl apply -n argocd -f -
           kubectl get deploy,pod,svc -n argocd
 
       - name: Download ArgoCD CLI
         run: |-
-          curl -sSL -o ./argocd https://github.com/argoproj/argo-cd/releases/download/v1.7.2/argocd-linux-amd64
+          curl -sSL -o ./argocd https://github.com/argoproj/argo-cd/releases/download/v1.7.8/argocd-linux-amd64
           chmod +x ./argocd
 
       - name: ArgoCD change password
         run: |-
-          sleep 3m
-          ARGOCD_SERVER=$(kubectl get service argocd-server -n argocd |awk 'NR==2' | awk '{print $4}')
+          sleep 1m
+          ARGOCD_SERVER=$(kubectl describe node |grep ExternalIP | awk '{print $2}'):30000
           echo $ARGOCD_SERVER
           ARGOCD_TEMP_PASSWORD=$(kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | cut -d'/' -f 2)
           ./argocd login --insecure --username admin --password $ARGOCD_TEMP_PASSWORD $ARGOCD_SERVER
